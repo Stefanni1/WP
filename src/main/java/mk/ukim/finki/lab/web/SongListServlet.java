@@ -1,38 +1,41 @@
 package mk.ukim.finki.lab.web;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import mk.ukim.finki.lab.model.Song;
 import mk.ukim.finki.lab.service.SongService;
+import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
-import org.thymeleaf.spring6.SpringTemplateEngine;
-import org.thymeleaf.web.IWebApplication;
 import org.thymeleaf.web.IWebExchange;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
-
 import java.io.IOException;
-
+import java.util.List;
 @WebServlet(urlPatterns = "/listSongs")
 public class SongListServlet extends HttpServlet {
+    public final TemplateEngine springTemplateEngine;
     public final SongService songService;
-    public final SpringTemplateEngine springTemplateEngine;
-
-    public SongListServlet(SongService songService, SpringTemplateEngine springTemplateEngine) {
-        this.songService = songService;
+    public SongListServlet(TemplateEngine springTemplateEngine, SongService songService) {
         this.springTemplateEngine = springTemplateEngine;
+        this.songService = songService;
     }
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        IWebExchange webExchange= JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(req,resp);
+        IWebExchange webExchange = JakartaServletWebApplication
+                .buildApplication(getServletContext())
+                .buildExchange(req, resp);
+        String songName = req.getParameter("songNameFilter");
+        List<Song> songs = songService.listSongs();
+        if (songName != null && !songName.isBlank()) {
+            songs = songs.stream().filter(song -> song.getTitle().toLowerCase().contains(songName.toLowerCase())).toList();
+        }
         WebContext context = new WebContext(webExchange);
-        context.setVariable("songs", songService.listSongs());
+        context.setVariable("songs", songs);
         springTemplateEngine.process("listSongs.html", context, resp.getWriter());
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.sendRedirect("/artist?trackId=" + req.getParameter("trackId"));
+        resp.sendRedirect("/artist?trackId=" + req.getParameter("trackId")); // TODO HOW TO DO IT WITH DISPATCHER
     }
 }

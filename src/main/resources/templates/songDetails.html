@@ -2,11 +2,12 @@
 <head>
     <meta charset="utf-8">
     <title>Song Details</title>
-
 </head>
 <body>
-<section>
-    <h1 th:text="'Song title '+${song.getTitle()}"></h1>
+<header>
+    <h1>Song title</h1>
+</header>
+<section th:if="song">
     <h2 th:text="'Genre: ' + ${song.getGenre()}"></h2>
     <h2 th:text="'Year: ' + ${song.getReleaseYear()}"></h2>
     <h2>Performers:</h2>
@@ -14,6 +15,5 @@
         <li th:each="artist: ${artists}" th:text="${artist.getFirstName() + ' ' + artist.getLastName()}"></li>
     </ul>
 </section>
-
 </body>
 </html>
