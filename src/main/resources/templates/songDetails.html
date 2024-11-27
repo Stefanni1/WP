@@ -2,6 +2,7 @@
 <head>
     <meta charset="utf-8">
     <title>Song Details</title>
+
 </head>
 <body>
 <header>
@@ -15,5 +16,6 @@
         <li th:each="artist: ${artists}" th:text="${artist.getFirstName() + ' ' + artist.getLastName()}"></li>
     </ul>
 </section>
+
 </body>
 </html>

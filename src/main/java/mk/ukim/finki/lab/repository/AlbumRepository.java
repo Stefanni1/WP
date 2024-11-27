@@ -1,6 +1,5 @@
 package mk.ukim.finki.lab.repository;
 
-
 import mk.ukim.finki.lab.bootstrap.DataHolder;
 import mk.ukim.finki.lab.model.Album;
 import org.springframework.stereotype.Repository;

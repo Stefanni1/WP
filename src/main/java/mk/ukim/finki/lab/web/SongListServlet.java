@@ -1,4 +1,5 @@
 package mk.ukim.finki.lab.web;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -10,16 +11,21 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.web.IWebExchange;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
+
 import java.io.IOException;
 import java.util.List;
+
 @WebServlet(urlPatterns = "/listSongs")
 public class SongListServlet extends HttpServlet {
+
     public final TemplateEngine springTemplateEngine;
     public final SongService songService;
+
     public SongListServlet(TemplateEngine springTemplateEngine, SongService songService) {
         this.springTemplateEngine = springTemplateEngine;
         this.songService = songService;
     }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         IWebExchange webExchange = JakartaServletWebApplication
@@ -33,7 +39,9 @@ public class SongListServlet extends HttpServlet {
         WebContext context = new WebContext(webExchange);
         context.setVariable("songs", songs);
         springTemplateEngine.process("listSongs.html", context, resp.getWriter());
+
     }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.sendRedirect("/artist?trackId=" + req.getParameter("trackId")); // TODO HOW TO DO IT WITH DISPATCHER
